@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mywebapp
+  namespace: webapp
+spec:
+  containers:
+  - name: mywebapp
+    image: 437005051152.dkr.ecr.us-east-1.amazonaws.com/app_web:v1.3
+    env:
+      - name: DBPWD
+        valueFrom:
+          secretKeyRef:
+            name: db-creds
+            key: password
+      - name: DBUSER
+        valueFrom:
+          secretKeyRef:
+            name: db-creds
+            key: user
+      - name: DBHOST
+        value: "10.244.0.7"
+      - name: DBPORT
+        value: "3306"
+      
+    ports:
+    - containerPort: 8080
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
