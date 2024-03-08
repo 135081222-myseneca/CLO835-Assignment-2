@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydbdeployment
+  namespace: sqldb
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mydb
+        image: 437005051152.dkr.ecr.us-east-1.amazonaws.com/mydb:v1.3
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-creds
+                key: password
+        ports:
+          - containerPort: 3306
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      
